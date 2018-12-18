@@ -6,7 +6,10 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Welcome to Flutter', home: RandomWords());
+    return MaterialApp(
+      title: 'Welcome to Flutter',
+      home: RandomWords(),
+    );
   }
 }
 
@@ -57,7 +60,36 @@ class RandomWordsState extends State<RandomWords> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Startup Name Generator')),
+        appBar: AppBar(title: Text('Startup Name Generator'),
+        actions: <Widget>[
+          IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved,)
+        ],),
         body: _buildSuggestions());
   }
+
+  void _pushSaved(){
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context){
+        final titles = _saved.map((wordPair){
+          return ListTile(
+            title: Text(
+              wordPair.asPascalCase,
+              style: _biggerFont,
+            ),
+          );
+        });
+        final divided = ListTile.divideTiles(
+          context: context,
+          tiles: titles
+        ).toList();
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Saved Suggestions'),
+          ),
+          body: ListView(children: divided)
+        );
+      }
+    ));
+  }
+
 }
